@@ -17,20 +17,10 @@ class ArgParser {
   std::string description_;
   bool has_help_ = false;
 
-  // template<typename T>
-  // struct Arguments {
-  //   std::map<T, ArgumentBuilder<std::string>*> string_args;
-  //   std::map<T, ArgumentBuilder<int>*> int_args;
-  //   std::map<T, ArgumentBuilder<bool>*> flag_args;
-  // };
-
   std::vector<IArgumentBuilder*> argument_builders_;
 
   std::map<std::string, IParserArgument*> arguments_;
   std::map<char, std::string> short_to_long_;
-
-  // Arguments<char> short_arguments_;
-  // Arguments<std::string> long_arguments_;
 
   enum class ValueTypes {
     kString,
@@ -49,7 +39,7 @@ class ArgParser {
  public:
   ArgParser(const std::string& name);
 
-  // ~ArgParser();
+  ~ArgParser();
 
   bool Parse(const std::vector<std::string>& argv);
 

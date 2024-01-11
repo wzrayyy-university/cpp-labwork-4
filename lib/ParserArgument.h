@@ -45,6 +45,7 @@ class ParserArgument : public IParserArgument {
     this->description = description;
     this->is_multi_value_ = is_multi_value;
   };
+  ~ParserArgument() = default;
   T GetValue();
   T GetMultiValue(std::size_t idx);
   std::size_t GetMultiValueSize();

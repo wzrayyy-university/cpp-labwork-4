@@ -9,8 +9,8 @@ namespace ArgumentParser {
 
 class IArgumentBuilder {
  public:
-  // virtual ~IArgumentBuilder() = default;
   virtual IParserArgument* Build() = 0;
+  virtual ~IArgumentBuilder() = default;
 
   bool has_default_ = false;
   bool has_value_ = false;
@@ -34,6 +34,8 @@ class ArgumentBuilder : public IArgumentBuilder {
  public:
   ArgumentBuilder() = default;
 
+  ~ArgumentBuilder() = default;
+
   ArgumentBuilder<T>& Default(T value);
 
   ArgumentBuilder<T>& MultiValue();
@@ -41,8 +43,6 @@ class ArgumentBuilder : public IArgumentBuilder {
   ArgumentBuilder<T>& MultiValue(std::size_t min_args_count);
 
   ArgumentBuilder<T>& Positional();
-
-  void SetValue(T value);
 
   ArgumentBuilder<T>& StoreValue(T& container);
 

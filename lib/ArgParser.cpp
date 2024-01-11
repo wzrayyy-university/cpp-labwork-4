@@ -11,6 +11,12 @@ void ArgParser::BuildArguments() {
   }
 }
 
+ArgParser::~ArgParser() {
+  for (auto pair : arguments_) {
+    delete pair.second;
+  }
+}
+
 // --- ArgParser ---
 ArgParser::ArgParser(const std::string& name) : name_(name){};
 

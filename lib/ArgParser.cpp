@@ -48,14 +48,13 @@ bool ArgParser::Parse(const std::vector<std::string>& argv) {
     }
   }
   return CheckForInvalidArgs();
-  // return true;
 };
 
 bool ArgParser::Parse(int argc, char** argv) {
   return Parse(std::vector<std::string>(argv, argv + argc));
 }
 
-// // -- Has invalid arguments --
+// -- Has invalid arguments --
 bool ArgParser::CheckForInvalidArgs() {
   for (auto pair : arguments_) {
     if ((!pair.second->has_default_ && !pair.second->has_value_) && (!pair.second->is_help_ || !pair.second->is_positional_)) {
@@ -68,11 +67,6 @@ bool ArgParser::CheckForInvalidArgs() {
   return true;
 }
 
-// bool ArgParser::CheckForInvalidArgs() {
-//   return CheckForInvalidArgs_<std::string>(long_arguments_.string_args) && CheckForInvalidArgs_<int>(long_arguments_.int_args)
-//       && CheckForInvalidArgs_<bool>(long_arguments_.flag_args);
-// }
-
 // --- Find positional argument name ---
 std::string ArgParser::FindPositionalArgumentName() {
   for (auto pair : arguments_) {
@@ -84,40 +78,34 @@ std::string ArgParser::FindPositionalArgumentName() {
   return "";
 }
 
-// --- Create argument ---
-template<typename T>
-ArgumentBuilder<T>* ArgParser::CreateArgument() {
-  return new ArgumentBuilder<T>;
-}
-
 // --- String argument ---
 ArgumentBuilder<std::string>& ArgParser::AddStringArgument(const std::string& long_name) {
-  auto* argument = CreateArgument<std::string>();
-  argument->long_name = long_name;
+  auto* builder = new ArgumentBuilder<std::string>;
+  builder->long_name = long_name;
   long_value_types_[long_name] = ValueTypes::kString;
-  argument_builders_.push_back(argument);
-  return *argument;
+  argument_builders_.push_back(builder);
+  return *builder;
 }
 
 ArgumentBuilder<std::string>& ArgParser::AddStringArgument(const char short_name, const std::string& long_name) {
-  auto* argument = &AddStringArgument(long_name);
+  auto* builder = &AddStringArgument(long_name);
   short_value_types_[short_name] = ValueTypes::kString;
-  argument->short_name = short_name;
-  argument_builders_.push_back(argument);
-  return *argument;
+  builder->short_name = short_name;
+  argument_builders_.push_back(builder);
+  return *builder;
 }
 
 ArgumentBuilder<std::string>& ArgParser::AddStringArgument(const std::string& long_name, const std::string& description) {
-  auto* argument = &AddStringArgument(long_name);
-  argument->description = description;
-  return *argument;
+  auto* builder = &AddStringArgument(long_name);
+  builder->description = description;
+  return *builder;
 }
 
 ArgumentBuilder<std::string>& ArgParser::AddStringArgument(const char short_name, const std::string& long_name,
                                                            const std::string& description) {
-  auto* argument = &AddStringArgument(short_name, long_name);
-  argument->description = description;
-  return *argument;
+  auto* builder = &AddStringArgument(short_name, long_name);
+  builder->description = description;
+  return *builder;
 }
 
 std::string ArgParser::GetStringValue(const std::string& long_name) {
@@ -130,31 +118,31 @@ std::string ArgParser::GetStringValue(const std::string& long_name, const std::s
 
 // --- Int argument ---
 ArgumentBuilder<int>& ArgParser::AddIntArgument(const std::string& long_name) {
-  auto* argument = CreateArgument<int>();
-  argument->long_name = long_name;
+  auto* builder = new ArgumentBuilder<int>;
+  builder->long_name = long_name;
   long_value_types_[long_name] = ValueTypes::kInt;
-  argument_builders_.push_back(argument);
-  return *argument;
+  argument_builders_.push_back(builder);
+  return *builder;
 }
 
 ArgumentBuilder<int>& ArgParser::AddIntArgument(char short_name, const std::string& long_name) {
-  auto& argument = AddIntArgument(long_name);
-  argument.short_name = short_name;
+  auto& builder = AddIntArgument(long_name);
+  builder.short_name = short_name;
   short_value_types_[short_name] = ValueTypes::kInt;
-  argument_builders_.push_back(&argument);
-  return argument;
+  argument_builders_.push_back(&builder);
+  return builder;
 }
 
 ArgumentBuilder<int>& ArgParser::AddIntArgument(const std::string& long_name, const std::string& description) {
-  auto& argument = AddIntArgument(long_name);
-  argument.description = description;
-  return argument;
+  auto& builder = AddIntArgument(long_name);
+  builder.description = description;
+  return builder;
 }
 
 ArgumentBuilder<int>& ArgParser::AddIntArgument(char short_name, const std::string& long_name, const std::string& description) {
-  auto& argument = AddIntArgument(short_name, long_name);
-  argument.description = description;
-  return argument;
+  auto& builder = AddIntArgument(short_name, long_name);
+  builder.description = description;
+  return builder;
 }
 
 int ArgParser::GetIntValue(const std::string& long_name) {
@@ -167,31 +155,31 @@ int ArgParser::GetIntValue(const std::string& long_name, const std::size_t idx) 
 
 // --- Flag argument ---
 ArgumentBuilder<bool>& ArgParser::AddFlag(const std::string& long_name) {
-  auto* argument = CreateArgument<bool>();
-  argument->long_name = long_name;
+  auto* builder = new ArgumentBuilder<bool>;
+  builder->long_name = long_name;
   long_value_types_[long_name] = ValueTypes::kFlag;
-  argument_builders_.push_back(argument);
-  return *argument;
+  argument_builders_.push_back(builder);
+  return *builder;
 }
 
 ArgumentBuilder<bool>& ArgParser::AddFlag(const char short_name, const std::string& long_name) {
-  auto& argument = AddFlag(long_name);
-  argument.short_name = short_name;
+  auto& builder = AddFlag(long_name);
+  builder.short_name = short_name;
   short_value_types_[short_name] = ValueTypes::kFlag;
-  argument_builders_.push_back(&argument);
-  return argument;
+  argument_builders_.push_back(&builder);
+  return builder;
 }
 
 ArgumentBuilder<bool>& ArgParser::AddFlag(const std::string& long_name, const std::string& description) {
-  auto& argument = AddFlag(long_name);
-  argument.description = description;
-  return argument;
+  auto& builder = AddFlag(long_name);
+  builder.description = description;
+  return builder;
 }
 
 ArgumentBuilder<bool>& ArgParser::AddFlag(const char short_name, const std::string& long_name, const std::string& description) {
-  auto& argument = AddFlag(short_name, long_name);
-  argument.description = description;
-  return argument;
+  auto& builder = AddFlag(short_name, long_name);
+  builder.description = description;
+  return builder;
 }
 
 bool ArgParser::GetFlag(const std::string& long_name) {
@@ -200,19 +188,17 @@ bool ArgParser::GetFlag(const std::string& long_name) {
 
 // --- Help (me) ---
 ArgumentBuilder<bool>& ArgParser::AddHelp(const char short_name, const std::string& long_name, const std::string& description) {
-  auto* argument = CreateArgument<bool>();
-  argument->short_name = short_name;
-  argument->long_name = long_name;
-  argument->description = "Display this help and exit";
-  argument->is_help_ = true;
+  auto* builder = new ArgumentBuilder<bool>;
+  builder->short_name = short_name;
+  builder->long_name = long_name;
+  builder->description = "Display this help and exit";
+  builder->is_help_ = true;
 
   description_ = description;
 
-  // long_arguments_.flag_args.insert({long_name, argument});
-  // short_arguments_.flag_args.insert({short_name, argument});
-  argument_builders_.push_back(argument);
+  argument_builders_.push_back(builder);
   long_value_types_[long_name] = ValueTypes::kFlag;
-  return *argument;
+  return *builder;
 }
 
 bool ArgParser::Help() {
@@ -220,47 +206,26 @@ bool ArgParser::Help() {
 }
 
 std::string ArgParser::HelpDescription() {
-  return "";
-  // std::string help_description = name_ + '\n';
-  // help_description += description_ + "\n\n";
-  // for (auto pair : long_arguments_.string_args) {
-  //   if (pair.second->is_help_) {
-  //     continue;
-  //   }
-  //   if (pair.second->short_name != '\0') {
-  //     help_description += '-' + std::string(1, pair.second->short_name) + ",  ";
-  //   } else {
-  //     help_description += "     ";
-  //   }
-  //   help_description += "--" + pair.second->long_name + ",  " + pair.second->description + "\n";
-  // }
+  std::string help_description = name_ + '\n';
+  help_description += description_ + "\n\n";
 
-  // for (auto pair : long_arguments_.int_args) {
-  //   if (pair.second->short_name != '\0') {
-  //     help_description += '-' + std::string(1, pair.second->short_name) + ",  ";
-  //   } else {
-  //     help_description += "     ";
-  //   }
-  //   help_description += "--" + pair.second->long_name + ",  " + pair.second->description + "\n";
-  // }
+  IParserArgument* help_argument = nullptr;
 
-  // ArgumentBuilder<bool>* help_argument = nullptr;
+  for (auto pair : arguments_) {
+    if (pair.second->is_help_) {
+      help_argument = pair.second;
+      continue;
+    }
+    if (pair.second->short_name != '\0') {
+      help_description += '-' + std::string(1, pair.second->short_name) + ",  ";
+    } else {
+      help_description += "     ";
+    }
+    help_description += "--" + pair.second->long_name + ",  " + pair.second->description + "\n";
+  }
 
-  // for (auto pair : long_arguments_.flag_args) {
-  //   if (pair.second->is_help_) {
-  //     help_argument = pair.second;
-  //     continue;
-  //   }
-  //   if (pair.second->short_name != '\0') {
-  //     help_description += '-' + std::string(1, pair.second->short_name) + ",  ";
-  //   } else {
-  //     help_description += "     ";
-  //   }
-  //   help_description += "--" + pair.second->long_name + ",  " + pair.second->description + "\n";
-  // }
+  help_description +=
+      "\n-" + std::string(1, help_argument->short_name) + ",  --" + help_argument->long_name + ",  " + help_argument->description;
 
-  // help_description +=
-  //     "\n-" + std::string(1, help_argument->short_name) + ",  --" + help_argument->long_name + ",  " + help_argument->description;
-
-  // return help_description;
+  return help_description;
 }

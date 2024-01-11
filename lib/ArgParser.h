@@ -42,9 +42,6 @@ class ArgParser {
   std::map<char, ValueTypes> short_value_types_;
 
  private:
-  template<typename T>
-  ArgumentBuilder<T>* CreateArgument();
-
   bool CheckForInvalidArgs();
 
   std::string FindPositionalArgumentName();

@@ -1,8 +1,6 @@
 add_library(argparser
   ArgParser.cpp
-  ArgParser.h
+  ArgumentBuilder.cpp
   ParserArgument.cpp
-  ParserArgument.h
   Utils.cpp
-  Utils.h
 )
